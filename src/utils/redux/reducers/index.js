@@ -10,10 +10,12 @@ import {
   priceRangeReducer,
 } from "./record";
 import { campaignReducer } from "./campaign";
+import { itemsReducer } from "./items";
 
 const masterReducer = combineReducers({
   recordReducer,
   campaignReducer,
+  itemsReducer,
   loadingReducer,
   NavselectReducer,
   tagReducer,

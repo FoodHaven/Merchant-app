@@ -1,8 +1,10 @@
 import React, { useState, useEffect } from "react";
 import Modal from "react-modal";
-import { useDropzone } from "react-dropzone";
+import { useDispatch } from "react-redux";
 import Dropzone from "../dropzone/dropzone";
 import SelectSearch from "../other/selectSearch";
+import { fetchItems } from "../../utils/redux/reducers/items";
+import { fetchingCampaign } from "../../utils/redux/reducers/campaign";
 
 const input = "p-3 bg-gray-200 rounded-md mb-4 w-full";
 
@@ -21,21 +23,32 @@ const modalSetting = {
   },
 };
 
+const fakeEvent = {
+  title: "Sample event",
+  description: "This is a sample event",
+  original_price: 100,
+  new_price: 90,
+  items: ["http://chenyoung01.pythonanywhere.com/items/1/"],
+  restaurant: "http://chenyoung01.pythonanywhere.com/restaurants/1/",
+  final_votes: 0,
+  img_url: "https://source.unsplash.com/random",
+  deadline: "2020-10-09T15:12:00Z",
+};
+
 const NewcampaignModal = (props) => {
+  const dispatch = useDispatch();
   const [eventname, setEventname] = useState("");
-  const [other, setOther] = useState("");
+  const [eventDescription, setEventDescription] = useState("");
   const [price, setPrice] = useState("");
   const [discountedPrice, setDiscountedPrice] = useState(0);
   const [selectedItems, setSelectedItems] = useState([]);
   const [imageURL, setImageURL] = useState("");
+  const [deadline, setDeadline] = useState("");
 
-  const onSubmit = () => {
-    const eventObj = {
-      name: eventname,
-      price: price,
-      discountedPrice: discountedPrice,
-    };
-  };
+  // Component on mount
+  useEffect(() => {
+    dispatch(fetchItems());
+  }, []);
 
   useEffect(() => {
     console.log(selectedItems);
@@ -48,6 +61,38 @@ const NewcampaignModal = (props) => {
   //   General hook function
   const onChange = (event, changeFunction) => {
     changeFunction(event.target.value);
+  };
+
+  const onSubmit = () => {
+    const obj = {
+      title: eventname,
+      description: eventDescription,
+      original_price: price,
+      new_price: parseInt(discountedPrice),
+      items: selectedItems,
+      restaurant: "http://chenyoung01.pythonanywhere.com/restaurants/1/",
+
+      final_votes: 0,
+      img_url: imageURL,
+      deadline: "2020-10-09T15:12:00Z",
+    };
+
+    const configObj = {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(obj),
+    };
+    console.log("Creating deal");
+
+    fetch(
+      "http://chenyoung01.pythonanywhere.com/deals/",
+      configObj
+    ).then((res) => res.json());
+
+    dispatch(fetchingCampaign());
+    props.closeModal();
+
+    console.log(obj);
   };
 
   return (
@@ -63,6 +108,8 @@ const NewcampaignModal = (props) => {
           Create bulk order campaign
         </div>
         <SelectSearch
+          setPrice={setPrice}
+          price={price}
           discountedPriceChange={discountedPriceChange}
           discountedPrice={discountedPrice}
           setSelectedItems={setSelectedItems}
@@ -75,15 +122,9 @@ const NewcampaignModal = (props) => {
         />
         <input
           className={input}
-          placeholder="Other"
-          value={other}
-          onChange={(event) => onChange(event, setOther)}
-        />
-        <input
-          className={input}
-          placeholder="Price"
-          value={price}
-          onChange={(event) => onChange(event, setPrice)}
+          placeholder="Event Description"
+          value={eventDescription}
+          onChange={(event) => onChange(event, setEventDescription)}
         />
         <Dropzone
           width="100%"
@@ -95,7 +136,7 @@ const NewcampaignModal = (props) => {
           <div className="right-0">
             <button
               className="p-3 bg-green-400 rounded-md font-bold text-white"
-              onClick={props.closeModal}
+              onClick={onSubmit}
               style={{ width: "150px" }}
             >
               Create

@@ -27,7 +27,7 @@ const RepopulateRecord = async () => {
 const fetchGeneral = async (url) => {
   const res = await axios.get(url);
   if (res) {
-    console.log(res.data);
+    // console.log(res.data);
     return res.data;
   } else {
     return null;

@@ -6,26 +6,8 @@ import Newcampaign from "../../components/modals/newcampaign";
 import { useSelector, useDispatch } from "react-redux";
 import { fetchingCampaign } from "../../utils/redux/reducers/campaign";
 import MoonLoader from "react-spinners/MoonLoader";
-import { fetchGeneral } from "../../utils/api/record";
+import { fetchItems } from "../../utils/redux/reducers/items";
 import "../../styles/animation.css";
-
-const sample1 = {
-  name: "Crazy sushi deal",
-  status: "Live",
-  responses: 132,
-  timeleft: 90,
-  image:
-    "https://images.japancentre.com/recipes/pics/18/main/makisushi.jpg?1557308201",
-};
-
-const sample2 = {
-  name: "Sick deal",
-  status: "Ended",
-  responses: 12,
-  timeleft: 0,
-  image:
-    "https://upload.wikimedia.org/wikipedia/commons/6/6d/Good_Food_Display_-_NCI_Visuals_Online.jpg",
-};
 
 const CampaignDashboard = () => {
   const dispatch = useDispatch();
@@ -53,15 +35,30 @@ const CampaignDashboard = () => {
 
   useEffect(() => {
     dispatch(fetchingCampaign());
+    dispatch(fetchItems());
   }, []);
+
+  // headers: { "Content-Type": "application/json" },
+  // body: JSON.stringify({ id: 5 }),
+
+  const remove = () => {
+    const configObj = {
+      method: "DELETE",
+    };
+
+    fetch(
+      "http://chenyoung01.pythonanywhere.com/deals/8",
+      configObj
+    ).then((res) => console.log("bruh"));
+  };
 
   return (
     <div>
       <Header />
-      <div>
+      <div className="flex flex-row">
         {isLoading ? (
           <div class="fade-in">
-            <div className="flex flex-row p-16">
+            <div className="flex flex-row p-16 flex-wrap">
               <div onClick={toggleModal}>
                 <CampaignCard />
               </div>
@@ -90,15 +87,20 @@ const CampaignDashboard = () => {
 
 export default CampaignDashboard;
 
-// <CampaignContent item={sample1} link="/sample" />
-//               <CampaignContent item={sample2} link="/sample" />
+// const sample1 = {
+//   name: "Crazy sushi deal",
+//   status: "Live",
+//   responses: 132,
+//   timeleft: 90,
+//   image:
+//     "https://images.japancentre.com/recipes/pics/18/main/makisushi.jpg?1557308201",
+// };
 
-// <button
-//         onClick={() =>
-//           fetchGeneral(
-//             "http://chenyoung01.pythonanywhere.com/deals/?format=json"
-//           )
-//         }
-//       >
-//         Test fetch
-//       </button>
+// const sample2 = {
+//   name: "Sick deal",
+//   status: "Ended",
+//   responses: 12,
+//   timeleft: 0,
+//   image:
+//     "https://upload.wikimedia.org/wikipedia/commons/6/6d/Good_Food_Display_-_NCI_Visuals_Online.jpg",
+// };

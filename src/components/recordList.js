@@ -7,6 +7,8 @@ import RecordRow from "../components/table/recordRow";
 import { filterPlainArray, compareValues } from "../utils/other/array";
 import { fetchingRecord } from "../utils/redux/reducers/record";
 import "../styles/animation.css";
+import { fetchingCampaign } from "../utils/redux/reducers/campaign";
+import { fetchGeneral } from "../utils/api/record";
 import axios from "axios";
 
 const gridHeaderValues = {
@@ -27,7 +29,9 @@ const RecordList = (props) => {
   let { id } = useParams();
   const dispatch = useDispatch();
 
+  const [selectedDeal, setSelectedDeal] = useState();
   const recordList = useSelector((state) => state.recordReducer);
+  const [localCampaign, setLocalCampaign] = useState({ orders: [] });
   const [filteredList, setFilteredList] = useState([]);
   const isLoading = useSelector((state) => state.loadingReducer);
   const filterInput = useSelector((state) => state.filterInputReducer);
@@ -60,20 +64,10 @@ const RecordList = (props) => {
 
     let newList = filterPlainArray(recordList, { size: temp });
 
-    // Good to here
-
     var fuse = new Fuse(newList, options);
     if (filterInput != "") {
       newList = fuse.search(filterInput);
     }
-
-    // if (sortArray.includes(1)) {
-    //   let idx = sortArray.indexOf(1);
-    //   newList.sort(compareValues(keys[idx], "asc"));
-    // } else if (sortArray.includes(2)) {
-    //   let idx = sortArray.indexOf(2);
-    //   newList.sort(compareValues(keys[idx], "desc"));
-    // }
 
     // Filter with param ID
     let temp2 = newList.filter((item) => item.deal_id == id);
@@ -86,6 +80,17 @@ const RecordList = (props) => {
 
   useEffect(() => {
     dispatch(fetchingRecord());
+    dispatch(fetchingCampaign());
+
+    fetchGeneral(
+      "http://chenyoung01.pythonanywhere.com/deals/" + id + "/?format=json"
+    )
+      .then((res) => {
+        setLocalCampaign(res);
+        console.log(res.orders.length);
+      })
+      .catch((err) => console.log(err));
+
     console.log(id);
   }, []);
 
@@ -104,11 +109,11 @@ const RecordList = (props) => {
           style={{ width: "100px", height: "100px" }}
         ></div>
         <div>
-          <div className="font-bold text-2xl mb-2">Sushi bundle deal</div>
+          <div className="font-bold text-2xl mb-2">{localCampaign.title}</div>
           <div className="flex flex-row">
             <div style={{ width: "200px" }}>
               <div>Status: Live</div>
-              <div>Responses: 212</div>
+              <div>Responses: {localCampaign.orders.length}</div>
             </div>
             <div>
               <div>Time: 20min</div>
@@ -153,13 +158,3 @@ const RecordList = (props) => {
 };
 
 export default RecordList;
-// <button onClick={fetchFake}>Fetch fake</button>
-
-// const fetchFake = async () => {
-//   axios
-//     .get("http://chenyoung01.pythonanywhere.com/outputs/orders/", {
-//       method: "GET",
-//     })
-//     .then((data) => console.log(data))
-//     .catch((err) => console.log(err));
-// };

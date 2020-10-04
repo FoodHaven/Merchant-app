@@ -1,46 +1,31 @@
 import React, { useState, useEffect } from "react";
 import { FiPlus, FiMinus } from "react-icons/fi";
+import { useSelector, useDispatch } from "react-redux";
+import { fetchItems } from "../../utils/redux/reducers/items";
 
 const inputSetting = "p-3 bg-gray-200 rounded-md mb-1 w-full";
 const inputSmall = "p-3 bg-gray-200 rounded-md mb-4";
 
-const foodList = [
-  {
-    name: "Sushi",
-    price: 14.23,
-    image:
-      "https://barbecuebible.com/wp-content/uploads/2013/05/featured-great-american-hamburger-1024x640.jpg",
-  },
-  {
-    name: "Steak",
-    price: 23.24,
-    image:
-      "https://img.buzzfeed.com/thumbnailer-prod-us-east-1/966b425bb57f4962b8fe297ae5b846d2/bfv8220_Steak_With_Garlic_Butter-FB1080.jpg?output-format=auto&output-quality=auto",
-  },
-  {
-    name: "Chips",
-    price: 1.99,
-    image:
-      "https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Potato-Chips.jpg/1200px-Potato-Chips.jpg",
-  },
-  {
-    name: "Coke",
-    price: 42.32,
-    image:
-      "https://us.coca-cola.com/content/dam/coke2016/page-properties-images/Coke_PageProperties.jpg",
-  },
-];
-
 const SelectSearch = (props) => {
+  const dispatch = useDispatch();
+  const localItemList = useSelector((state) => state.itemsReducer);
   const [input, setInput] = useState("");
-  const [itemList, setItemList] = useState(foodList);
-  const [price, setPrice] = useState(0);
-  const [filteredList, setFilteredList] = useState(foodList);
+  const [itemList, setItemList] = useState(localItemList);
+  const [filteredList, setFilteredList] = useState(localItemList);
   const [selectedItems, setSelectedItems] = useState([]);
+
+  // on landing
+  useEffect(() => {
+    dispatch(fetchItems());
+  }, []);
+
+  // useEffect(() => {
+  //   setItemList(localItemList);
+  // }, [localItemList]);
 
   useEffect(() => {
     setFilteredList(
-      itemList.filter((item) =>
+      localItemList.filter((item) =>
         item.name.toLowerCase().includes(input.toLowerCase())
       )
     );
@@ -50,13 +35,14 @@ const SelectSearch = (props) => {
   useEffect(() => {
     let sum = 0;
     let objList = [];
-    for (let i = 0; i < itemList.length; i++) {
-      if (selectedItems.includes(itemList[i].name)) {
-        sum = sum + itemList[i].price;
-        objList.push(itemList[i]);
+    for (let i = 0; i < localItemList.length; i++) {
+      if (selectedItems.includes(localItemList[i].name)) {
+        sum = sum + localItemList[i].price;
+        objList.push(localItemList[i].url);
       }
     }
-    setPrice(sum);
+
+    props.setPrice(sum);
     props.setSelectedItems(objList);
   }, [selectedItems]);
 
@@ -140,7 +126,7 @@ const SelectSearch = (props) => {
       </div>
       <div className="flex flex-row">
         <div className={inputSmall} style={{ width: "47%" }}>
-          Total: {price}
+          Total: {props.price}
         </div>
         <div className="w-2/12" style={{ width: "6%" }} />
         <input
@@ -157,3 +143,30 @@ const SelectSearch = (props) => {
 };
 
 export default SelectSearch;
+
+// const foodList = [
+//   {
+//     name: "Sushi",
+//     price: 14.23,
+//     image:
+//       "https://barbecuebible.com/wp-content/uploads/2013/05/featured-great-american-hamburger-1024x640.jpg",
+//   },
+//   {
+//     name: "Steak",
+//     price: 23.24,
+//     image:
+//       "https://img.buzzfeed.com/thumbnailer-prod-us-east-1/966b425bb57f4962b8fe297ae5b846d2/bfv8220_Steak_With_Garlic_Butter-FB1080.jpg?output-format=auto&output-quality=auto",
+//   },
+//   {
+//     name: "Chips",
+//     price: 1.99,
+//     image:
+//       "https://upload.wikimedia.org/wikipedia/commons/thumb/6/69/Potato-Chips.jpg/1200px-Potato-Chips.jpg",
+//   },
+//   {
+//     name: "Coke",
+//     price: 42.32,
+//     image:
+//       "https://us.coca-cola.com/content/dam/coke2016/page-properties-images/Coke_PageProperties.jpg",
+//   },
+// ];
