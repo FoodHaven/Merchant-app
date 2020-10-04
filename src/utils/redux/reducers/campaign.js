@@ -18,6 +18,7 @@ const campaignReducer = (state = [], action) => {
 };
 
 const fetchingCampaign = (dispatch) => {
+  // console.log()
   console.log(BASE_URL + "deals/?format=json");
   return (dispatch) => {
     dispatch(SETLOADING(0));
