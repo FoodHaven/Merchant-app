@@ -5,9 +5,7 @@ import { mockRecord } from "../data/mockRecord";
 const FetchRecord = async () => {
   // console.log(BASE_URL);
   // console.log(BASE_URL + "/records");
-  const response = await axios.get(
-    "http://chenyoung01.pythonanywhere.com/outputs/orders/"
-  );
+  const response = await axios.get(BASE_URL + "outputs/orders/");
 
   if (response) {
     return response.data;
@@ -19,7 +17,7 @@ const FetchRecord = async () => {
 const RepopulateRecord = async () => {
   console.log("Repopulating record");
   axios
-    .post(BASE_URL + "/records/admin/repopulate", { records: mockRecord })
+    .post(BASE_URL + "records/admin/repopulate", { records: mockRecord })
     .then((response) => console.log(response))
     .catch((err) => console.log(err));
 };

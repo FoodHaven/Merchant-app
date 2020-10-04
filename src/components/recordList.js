@@ -9,6 +9,7 @@ import { fetchingRecord } from "../utils/redux/reducers/record";
 import "../styles/animation.css";
 import { fetchingCampaign } from "../utils/redux/reducers/campaign";
 import { fetchGeneral } from "../utils/api/record";
+import { BASE_URL } from "../utils/api/base";
 import axios from "axios";
 
 const gridHeaderValues = {
@@ -82,9 +83,7 @@ const RecordList = (props) => {
     dispatch(fetchingRecord());
     dispatch(fetchingCampaign());
 
-    fetchGeneral(
-      "http://chenyoung01.pythonanywhere.com/deals/" + id + "/?format=json"
-    )
+    fetchGeneral(BASE_URL + "deals/" + id + "/?format=json")
       .then((res) => {
         setLocalCampaign(res);
         console.log(res.orders.length);

@@ -1,6 +1,7 @@
 // Actions
 import { SETLOADING } from "./loading";
 import { fetchGeneral } from "../../api/record";
+import { BASE_URL } from "../../api/base";
 
 const SET_CAMPAIGN = (payload) => {
   return { type: "SET_CAMPAIGN", payload };
@@ -17,9 +18,10 @@ const campaignReducer = (state = [], action) => {
 };
 
 const fetchingCampaign = (dispatch) => {
+  console.log(BASE_URL + "deals/?format=json");
   return (dispatch) => {
     dispatch(SETLOADING(0));
-    fetchGeneral("http://chenyoung01.pythonanywhere.com/deals/?format=json")
+    fetchGeneral(BASE_URL + "deals/?format=json")
       .then((res) => {
         dispatch(SET_CAMPAIGN(res));
         dispatch(SETLOADING(1));

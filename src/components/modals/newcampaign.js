@@ -5,6 +5,7 @@ import Dropzone from "../dropzone/dropzone";
 import SelectSearch from "../other/selectSearch";
 import { fetchItems } from "../../utils/redux/reducers/items";
 import { fetchingCampaign } from "../../utils/redux/reducers/campaign";
+import { BASE_URL } from "../../utils/api/base";
 
 const input = "p-3 bg-gray-200 rounded-md mb-4 w-full";
 
@@ -23,17 +24,17 @@ const modalSetting = {
   },
 };
 
-const fakeEvent = {
-  title: "Sample event",
-  description: "This is a sample event",
-  original_price: 100,
-  new_price: 90,
-  items: ["http://chenyoung01.pythonanywhere.com/items/1/"],
-  restaurant: "http://chenyoung01.pythonanywhere.com/restaurants/1/",
-  final_votes: 0,
-  img_url: "https://source.unsplash.com/random",
-  deadline: "2020-10-09T15:12:00Z",
-};
+// const fakeEvent = {
+//   title: "Sample event",
+//   description: "This is a sample event",
+//   original_price: 100,
+//   new_price: 90,
+//   items: ["http://chenyoung01.pythonanywhere.com/items/1/"],
+//   restaurant: "http://chenyoung01.pythonanywhere.com/restaurants/1/",
+//   final_votes: 0,
+//   img_url: "https://source.unsplash.com/random",
+//   deadline: "2020-10-09T15:12:00Z",
+// };
 
 const NewcampaignModal = (props) => {
   const dispatch = useDispatch();
@@ -84,10 +85,7 @@ const NewcampaignModal = (props) => {
     };
     console.log("Creating deal");
 
-    fetch(
-      "http://chenyoung01.pythonanywhere.com/deals/",
-      configObj
-    ).then((res) => res.json());
+    fetch(BASE_URL + "deals/", configObj).then((res) => res.json());
 
     dispatch(fetchingCampaign());
     props.closeModal();

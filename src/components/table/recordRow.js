@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import Modal from "react-modal";
 import { useDispatch } from "react-redux";
 import { fetchingRecord } from "../../utils/redux/reducers/record";
+import { BASE_URL } from "../../utils/api/base";
 
 import { SET_FLAGGED } from "../../utils/redux/reducers/record";
 
@@ -38,7 +39,7 @@ const HistoryModal = (props) => {
   const [flag, setFlag] = useState(false);
 
   const onDeleteRecord = async (id, closeRequest) => {
-    const url = "http://chenyoung01.pythonanywhere.com/orders/" + id;
+    const url = BASE_URL + "orders/" + id;
     const configObj = {
       method: "DELETE",
     };
