@@ -101,13 +101,21 @@ const RecordList = (props) => {
     );
   };
 
+  // <div
+  //         className="mr-3 bg-gray-500 rounded-md"
+  //         style={{ width: "100px", height: "100px" }}
+  //       ></div>
+
   return (
     <div className="p-8 w-full">
       <div className="w-full rounded-md bg-gray-200 p-3 flex flex-row mb-4">
-        <div
-          className="mr-3 bg-gray-500 rounded-md"
-          style={{ width: "100px", height: "100px" }}
-        ></div>
+        <div style={{ height: "100px", width: "100px" }} className="rounded-md">
+          <img
+            src={localCampaign.img_url}
+            style={{ height: "100px", width: "100px" }}
+            className="rounded-md p-3 mb-4 overflow-hidden"
+          />
+        </div>
         <div>
           <div className="font-bold text-2xl mb-2">{localCampaign.title}</div>
           <div className="flex flex-row">

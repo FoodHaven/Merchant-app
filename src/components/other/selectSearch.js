@@ -111,9 +111,9 @@ const SelectSearch = (props) => {
         ))}
       </div>
       <div className="text-xl font-bold">Selected items</div>
-      <div className="flex flex-row mb-4">
+      <div className="flex flex-row mb-4 flex-wrap">
         {selectedItems.map((item) => (
-          <div className="p-2 mr-3 bg-gray-200 font-semibold flex flex-row items-center">
+          <div className="p-2 mr-3 bg-gray-200 font-semibold flex flex-row items-center mb-3">
             <div className="mr-3">{item}</div>
             <div
               className="rounded-lg bg-gray-400 p-1"
